@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+jobs:
+      
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Pixi
+      uses: prefix-dev/setup-pixi@v0.5.1
+      with:
+        pixi-version: v0.16.1
+        manifest-path: backend/pixi.toml
+
+    - name: banking_api package
+      working-directory: ./backend
+      run: |
+        pixi run pip_install_e
+        
+    - name: Run tests
+      working-directory: ./backend
+      run: pixi run pytest .
+
