@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+jobs:
+      
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Pixi
+      uses: prefix-dev/setup-pixi@v0.4.3
+      with:
+        pixi-version: v0.12.0
+
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        pixi install
+        
+    - name: Run tests
+      working-directory: ./backend
+      run: pixi run pytest .
+
