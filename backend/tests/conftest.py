@@ -36,8 +36,8 @@ def client_fixture(session: Session):
     app.dependency_overrides.clear()
 
 
-@pytest.fixture(name="client_with_account")
-def client_fixture_with_account(session: Session):
+@pytest.fixture(name="client_with_accounts", scope="function")
+def client_with_accounts(session: Session):
     def get_session_override():
         return session
 
@@ -49,6 +49,13 @@ def client_fixture_with_account(session: Session):
         json={
             "balance": 1000.0,
             "customer_id": 4,
+        },
+    )
+    client.post(
+        "accounts/",
+        json={
+            "balance": 1000.0,
+            "customer_id": 3,
         },
     )
     yield client

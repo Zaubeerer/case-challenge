@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -18,3 +21,16 @@ class AccountCreate(SQLModel):
 class Account(AccountCreate, table=True):
     id: int = Field(default=None, primary_key=True)
     customer: Customer = Relationship(back_populates="accounts")
+
+
+class TransferCreate(SQLModel):
+    id_sender: int
+    id_receiver: int
+    amount: float
+
+
+class Transfer(TransferCreate, table=True):
+    id: int = Field(default=None, primary_key=True)
+    executed_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), default=datetime.utcnow)
+    )
