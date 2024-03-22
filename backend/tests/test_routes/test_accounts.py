@@ -20,16 +20,16 @@ def test_create_bank_account(client: TestClient):
     "account_id, expected_value, expected_exception",
     [
         pytest.param(1, 1000.0, None, id="account_exists"),
-        pytest.param(2, None, AccountNotFound, id="account_not_found"),
+        pytest.param(3, None, AccountNotFound, id="account_not_found"),
     ],
 )
 def test_get_account_balance(
-    client_with_account: TestClient, account_id, expected_value, expected_exception
+    client_with_accounts: TestClient, account_id, expected_value, expected_exception
 ):
     if expected_exception is not None:
         with pytest.raises(AccountNotFound):
-            response = client_with_account.get(f"/accounts/{account_id}/balance")
+            response = client_with_accounts.get(f"/accounts/{account_id}/balance")
     else:
-        response = client_with_account.get(f"/accounts/{account_id}/balance")
+        response = client_with_accounts.get(f"/accounts/{account_id}/balance")
         assert response.status_code == 200
         assert response.json() == expected_value
