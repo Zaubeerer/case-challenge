@@ -34,3 +34,22 @@ def client_fixture(session: Session):
 
     yield client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(name="client_with_account")
+def client_fixture_with_account(session: Session):
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[get_db] = get_session_override
+
+    client = TestClient(app)
+    client.post(
+        "accounts/",
+        json={
+            "balance": 1000.0,
+            "customer_id": 4,
+        },
+    )
+    yield client
+    app.dependency_overrides.clear()

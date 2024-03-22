@@ -12,3 +12,9 @@ def test_create_bank_account(client: TestClient):
 
     assert response.status_code == 200
     assert response.json() == {"id": 1, "customer_id": 4, "balance": 1000.0}
+
+
+def test_get_account_balance(client_with_account: TestClient):
+    response = client_with_account.get("/accounts/1/balance")
+    assert response.status_code == 200
+    assert response.json() == 1000.0
