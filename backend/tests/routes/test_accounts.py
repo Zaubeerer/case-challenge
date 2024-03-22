@@ -1,3 +1,5 @@
+import pytest
+from banking_api.routes.accounts import AccountNotFound
 from fastapi.testclient import TestClient
 
 
@@ -14,7 +16,20 @@ def test_create_bank_account(client: TestClient):
     assert response.json() == {"id": 1, "customer_id": 4, "balance": 1000.0}
 
 
-def test_get_account_balance(client_with_account: TestClient):
-    response = client_with_account.get("/accounts/1/balance")
-    assert response.status_code == 200
-    assert response.json() == 1000.0
+@pytest.mark.parametrize(
+    "account_id, expected_value, expected_exception",
+    [
+        pytest.param(1, 1000.0, None, id="account_exists"),
+        pytest.param(2, None, AccountNotFound, id="account_not_found"),
+    ],
+)
+def test_get_account_balance(
+    client_with_account: TestClient, account_id, expected_value, expected_exception
+):
+    if expected_exception is not None:
+        with pytest.raises(AccountNotFound):
+            response = client_with_account.get(f"/accounts/{account_id}/balance")
+    else:
+        response = client_with_account.get(f"/accounts/{account_id}/balance")
+        assert response.status_code == 200
+        assert response.json() == expected_value

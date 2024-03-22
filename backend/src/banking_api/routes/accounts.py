@@ -6,6 +6,10 @@ from ..database import SessionDep, create_db_and_tables
 router = APIRouter()
 
 
+class AccountNotFound(ValueError):
+    pass
+
+
 @router.on_event("startup")
 def on_startup():
     create_db_and_tables()
@@ -34,4 +38,4 @@ def get_account_balance(account_id: int, session: SessionDep):
     if account:
         return account.balance
     else:
-        return {"message": "Account not found"}
+        raise AccountNotFound(f"Account with {account_id=} not found")
