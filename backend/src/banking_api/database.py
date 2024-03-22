@@ -1,3 +1,7 @@
+from collections.abc import Generator
+from typing import Annotated
+
+from fastapi import Depends
 from sqlalchemy import text
 from sqlmodel import Session, SQLModel, create_engine
 
@@ -14,11 +18,6 @@ def create_db_and_tables(engine=engine):
     SQLModel.metadata.create_all(engine)
 
 
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-
 def clear_data(session: Session):
     session.execute(text("DELETE FROM customer"))
     session.commit()
@@ -33,9 +32,19 @@ def populate_db(engine=engine):
     ]
 
     with Session(engine) as session:
-        users = [
+        customers = [
             Customer(name=customer["name"], id=customer["id"])
             for customer in initial_customers
         ]
-        session.add_all(users)
+        session.add_all(customers)
+        accounts = []
+        session.add_all(accounts)
         session.commit()
+
+
+def get_db() -> Generator[Session, None, None]:
+    with Session(engine) as session:
+        yield session
+
+
+SessionDep = Annotated[Session, Depends(get_db)]
