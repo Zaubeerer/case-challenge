@@ -67,13 +67,40 @@ def test_transfer_amount(
     if expected_exception is not None:
         with pytest.raises(expected_exception):
             response = client_with_accounts.post(
-                "/transfers", json=transfer_create.dict()
+                "/transfers", json=transfer_create.model_dump()
             )
     else:
-        response = client_with_accounts.post("/transfers", json=transfer_create.dict())
+        # Get balances before the transfer
+        sender_balance_pre = client_with_accounts.get(
+            f"/accounts/{transfer_data['id_sender']}/balance"
+        ).json()
+        receiver_balance_pre = client_with_accounts.get(
+            f"/accounts/{transfer_data['id_receiver']}/balance"
+        ).json()
+
+        # Make the transfer
+        response = client_with_accounts.post(
+            "/transfers", json=transfer_create.model_dump()
+        )
 
         assert response.status_code == 200
         assert TransferCreate(**response.json()) == expected_response
+
+        # Get balances after the transfer
+        sender_balance_post = client_with_accounts.get(
+            f"/accounts/{transfer_data['id_sender']}/balance"
+        ).json()
+        receiver_balance_post = client_with_accounts.get(
+            f"/accounts/{transfer_data['id_receiver']}/balance"
+        ).json()
+
+        # Assert that the balances have been updated correctly
+        assert (
+            sender_balance_post + receiver_balance_post
+            == sender_balance_pre + receiver_balance_pre
+        )
+        assert sender_balance_post == sender_balance_pre - transfer_data["amount"]
+        assert receiver_balance_post == receiver_balance_pre + transfer_data["amount"]
 
 
 def test_get_transfer_history(client_with_transfers: TestClient):
