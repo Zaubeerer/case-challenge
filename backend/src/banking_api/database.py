@@ -2,7 +2,6 @@ from collections.abc import Generator
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy import text
 from sqlmodel import Session, SQLModel, create_engine
 
 from .models import Customer
@@ -16,11 +15,6 @@ engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
 
 def create_db_and_tables(engine=engine):
     SQLModel.metadata.create_all(engine)
-
-
-def clear_data(session: Session):
-    session.execute(text("DELETE FROM customer"))
-    session.commit()
 
 
 def populate_db(engine=engine):

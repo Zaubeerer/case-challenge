@@ -1,7 +1,10 @@
+from typing import Any
+
 from fastapi import APIRouter
+from sqlalchemy import or_
 from sqlmodel import select
 
-from ..database import SessionDep, create_db_and_tables
+from ..database import SessionDep
 from ..models import Account, Transfer, TransferCreate
 
 router = APIRouter()
@@ -15,23 +18,21 @@ class InsufficientFunds(Exception):
     pass
 
 
-@router.on_event("startup")
-def on_startup():
-    create_db_and_tables()
-
-
 @router.post("/", response_model=Transfer)
 def transfer_amount(
     transfer_in: TransferCreate,
     session: SessionDep,
-):
+) -> Any:
+    """
+    Transfer the specified amount from one account to another.
+    """
     with session:
         account_sender = session.exec(
             select(Account).where(Account.id == transfer_in.id_sender)
-        ).one()
+        ).first()
         account_receiver = session.exec(
             select(Account).where(Account.id == transfer_in.id_receiver)
-        ).one()
+        ).first()
 
         if not account_sender:
             raise AccountIDError(f"Account with {account_sender} does not exist.")
@@ -47,7 +48,33 @@ def transfer_amount(
         account_sender.balance -= transfer_in.amount
         account_receiver.balance += transfer_in.amount
 
-        transfer = Transfer(**transfer_in.dict())
+        transfer = Transfer(**transfer_in.model_dump())
         session.add(transfer)
+        session.commit()
+        session.refresh(transfer)
 
     return transfer
+
+
+@router.get("/history", response_model=list[Transfer])
+def get_transfer_history(session: SessionDep) -> Any:
+    """
+    Retrieve the history of all transfers.
+    """
+    transfers = session.query(Transfer).all()
+    return transfers
+
+
+@router.get("/history/{account_id}", response_model=list[Transfer])
+def get_transfer_history_by_account_id(account_id: int, session: SessionDep) -> Any:
+    """
+    Retrieves the transfer history for a given account ID.
+    """
+    transfers = (
+        session.query(Transfer)
+        .filter(
+            or_(Transfer.id_sender == account_id, Transfer.id_receiver == account_id)
+        )
+        .all()
+    )
+    return transfers
