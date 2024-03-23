@@ -1,6 +1,7 @@
 import pytest
-from banking_api.models import TransferCreate
+from banking_api.models import Transfer, TransferCreate
 from banking_api.routes.transfers import InsufficientFunds
+from conftest import TRANSFER
 from fastapi.testclient import TestClient
 
 
@@ -9,7 +10,9 @@ from fastapi.testclient import TestClient
     [
         pytest.param(
             100.0,
-            {"id_sender": 1, "id_receiver": 2, "amount": 100.0, "id": None},
+            TransferCreate(
+                **{"id_sender": 1, "id_receiver": 2, "amount": 100.0, "id": 1}
+            ),
             None,
             id="transfer successful",
         ),
@@ -40,4 +43,32 @@ def test_transfer_amount(
         response = client_with_accounts.post("/transfers", json=transfer_create.dict())
 
         assert response.status_code == 200
-        assert response.json() == expected_response
+        assert TransferCreate(**response.json()) == expected_response
+
+
+def test_get_transfer_history(client_with_transfers: TestClient):
+    response = client_with_transfers.get("/transfers/history")
+
+    assert response.status_code == 200
+
+    assert isinstance(response.json(), list)
+    assert len(response.json()) == 1
+    for transfer in response.json():
+        assert TransferCreate(**transfer) == TRANSFER
+
+
+@pytest.mark.parametrize("account_id, expected_transfers", [(1, [TRANSFER]), (3, [])])
+def test_get_transfer_history_by_account_id(
+    client_with_transfers: TestClient,
+    account_id: int,
+    expected_transfers: list[Transfer],
+):
+    response = client_with_transfers.get(f"/transfers/history/{account_id}")
+
+    assert response.status_code == 200
+
+    assert isinstance(response.json(), list)
+    assert len(response.json()) == len(expected_transfers)
+    for transfer_dict in response.json():
+        transfer = TransferCreate(**transfer_dict)
+        assert transfer.id_sender == account_id or transfer.id_receiver == account_id

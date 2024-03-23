@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from sqlalchemy import or_
 from sqlmodel import select
 
 from ..database import SessionDep, create_db_and_tables
@@ -49,5 +50,25 @@ def transfer_amount(
 
         transfer = Transfer(**transfer_in.dict())
         session.add(transfer)
+        session.commit()
+        session.refresh(transfer)
 
     return transfer
+
+
+@router.get("/history", response_model=list[Transfer])
+def get_transfer_history(session: SessionDep):
+    transfers = session.query(Transfer).all()
+    return transfers
+
+
+@router.get("/history/{account_id}", response_model=list[Transfer])
+def get_transfer_history_by_account_id(account_id: int, session: SessionDep):
+    transfers = (
+        session.query(Transfer)
+        .filter(
+            or_(Transfer.id_sender == account_id, Transfer.id_receiver == account_id)
+        )
+        .all()
+    )
+    return transfers
