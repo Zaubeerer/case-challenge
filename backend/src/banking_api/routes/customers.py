@@ -10,18 +10,18 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[Customer])
-def read_items(session: SessionDep) -> Any:
+def read_customers(session: SessionDep) -> Any:
     """
-    Retrieve items.
+    Retrieve all customers.
     """
     customers = session.exec(select(Customer)).all()
     return customers
 
 
 @router.post("/", response_model=Customer)
-def create_item(customer_in: CustomerCreate, session: SessionDep) -> Any:
+def create_customer(customer_in: CustomerCreate, session: SessionDep) -> Any:
     """
-    Create new item.
+    Create new customer.
     """
     customer = Customer.model_validate(customer_in)
 
@@ -32,9 +32,9 @@ def create_item(customer_in: CustomerCreate, session: SessionDep) -> Any:
 
 
 @router.get("/{customer_id}", response_model=Customer)
-def read_item(customer_id: int, session: SessionDep) -> Any:
+def read_customer(customer_id: int, session: SessionDep) -> Any:
     """
-    Retrieve a single customer.
+    Retrieve a single customer based on its customer ID.
     """
     customer = session.exec(select(Customer).where(Customer.id == customer_id)).first()
     if not customer:
@@ -43,7 +43,7 @@ def read_item(customer_id: int, session: SessionDep) -> Any:
 
 
 @router.delete("/{customer_id}", response_model=Customer)
-def delete_item(customer_id: int, session: SessionDep) -> Any:
+def delete_customer(customer_id: int, session: SessionDep) -> Any:
     """
     Delete a customer.
     """
@@ -57,5 +57,8 @@ def delete_item(customer_id: int, session: SessionDep) -> Any:
 
 @router.get("/{customer_id}/accounts", response_model=list[Account])
 def list_accounts_by_customer(customer_id: int, session: SessionDep) -> Any:
+    """
+    Retrieve all accounts for a given customer ID.
+    """
     accounts = session.query(Account).filter(Account.customer_id == customer_id).all()
     return accounts

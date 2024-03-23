@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import APIRouter
 from sqlalchemy import or_
 from sqlmodel import select
@@ -20,7 +22,10 @@ class InsufficientFunds(Exception):
 def transfer_amount(
     transfer_in: TransferCreate,
     session: SessionDep,
-):
+) -> Any:
+    """
+    Transfer the specified amount from one account to another.
+    """
     with session:
         account_sender = session.exec(
             select(Account).where(Account.id == transfer_in.id_sender)
@@ -52,13 +57,19 @@ def transfer_amount(
 
 
 @router.get("/history", response_model=list[Transfer])
-def get_transfer_history(session: SessionDep):
+def get_transfer_history(session: SessionDep) -> Any:
+    """
+    Retrieve the history of all transfers.
+    """
     transfers = session.query(Transfer).all()
     return transfers
 
 
 @router.get("/history/{account_id}", response_model=list[Transfer])
-def get_transfer_history_by_account_id(account_id: int, session: SessionDep):
+def get_transfer_history_by_account_id(account_id: int, session: SessionDep) -> Any:
+    """
+    Retrieves the transfer history for a given account ID.
+    """
     transfers = (
         session.query(Transfer)
         .filter(
