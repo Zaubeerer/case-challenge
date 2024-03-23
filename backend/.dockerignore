@@ -1,0 +1,48 @@
+# flyctl launch added from .gitignore
+
+# Python
+**/*.pyc
+**/*.pyo
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+**/*.egg-info
+**/.coverage
+**/coverage.xml
+
+# Virtual environments
+**/venv
+**/env
+**/env.bak
+**/env1
+**/env2
+**/.env
+**/.pixi
+
+
+# # IDEs and editors
+# .idea/
+# .vscode/
+# *.sublime-project
+# *.sublime-workspace
+# TODO:
+
+
+# flyctl launch added from .mypy_cache/.gitignore
+# Automatically created by mypy
+.mypy_cache/**/*
+
+# flyctl launch added from .pixi/env/lib/python3.12/site-packages/sqlalchemy/cyextension/.gitignore
+# cython complied files
+.pixi/env/lib/python3.12/site-packages/sqlalchemy/cyextension/**/*.c
+.pixi/env/lib/python3.12/site-packages/sqlalchemy/cyextension/**/*.o
+# cython annotated output
+.pixi/env/lib/python3.12/site-packages/sqlalchemy/cyextension/**/*.html
+
+# flyctl launch added from .pytest_cache/.gitignore
+# Created by pytest automatically.
+.pytest_cache/**/*
+
+# flyctl launch added from .ruff_cache/.gitignore
+.ruff_cache/**/*
+fly.toml
