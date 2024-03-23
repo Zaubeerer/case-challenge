@@ -29,10 +29,10 @@ def transfer_amount(
     with session:
         account_sender = session.exec(
             select(Account).where(Account.id == transfer_in.id_sender)
-        ).one()
+        ).first()
         account_receiver = session.exec(
             select(Account).where(Account.id == transfer_in.id_receiver)
-        ).one()
+        ).first()
 
         if not account_sender:
             raise AccountIDError(f"Account with {account_sender} does not exist.")

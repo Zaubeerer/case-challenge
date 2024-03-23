@@ -196,6 +196,28 @@ package:
   size: 25170
   timestamp: 1666700778190
 - platform: linux-64
+  name: coverage
+  version: 7.4.4
+  category: main
+  manager: conda
+  dependencies:
+  - libgcc-ng >=12
+  - python >=3.12,<3.13.0a0
+  - python_abi 3.12.* *_cp312
+  - tomli
+  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.4.4-py312h98912ed_0.conda
+  hash:
+    md5: 7002151fcfe55ded0595fc7c3f5e1209
+    sha256: f160f9c89799bf6a14a023711d56cd800117c7a3ad2e117e1a2ced764b0b5206
+  build: py312h98912ed_0
+  arch: x86_64
+  subdir: linux-64
+  build_number: 0
+  license: Apache-2.0
+  license_family: APACHE
+  size: 357166
+  timestamp: 1710462905888
+- platform: linux-64
   name: exceptiongroup
   version: 1.2.0
   category: main
@@ -824,6 +846,29 @@ package:
   size: 255523
   timestamp: 1709992719691
 - platform: linux-64
+  name: pytest-cov
+  version: 4.1.0
+  category: main
+  manager: conda
+  dependencies:
+  - coverage >=5.2.1
+  - pytest >=4.6
+  - python >=3.7
+  - toml
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-cov-4.1.0-pyhd8ed1ab_0.conda
+  hash:
+    md5: 06eb685a3a0b146347a58dda979485da
+    sha256: f07d3b44cabbed7843de654c4a6990a08475ce3b708bb735c7da9842614586f2
+  build: pyhd8ed1ab_0
+  arch: x86_64
+  subdir: linux-64
+  build_number: 0
+  license: MIT
+  license_family: MIT
+  noarch: python
+  size: 25436
+  timestamp: 1684965001294
+- platform: linux-64
   name: python
   version: 3.12.2
   category: main
@@ -1025,6 +1070,26 @@ package:
   license_family: BSD
   size: 3318875
   timestamp: 1699202167581
+- platform: linux-64
+  name: toml
+  version: 0.10.2
+  category: main
+  manager: conda
+  dependencies:
+  - python >=2.7
+  url: https://conda.anaconda.org/conda-forge/noarch/toml-0.10.2-pyhd8ed1ab_0.tar.bz2
+  hash:
+    md5: f832c45a477c78bebd107098db465095
+    sha256: f0f3d697349d6580e4c2f35ba9ce05c65dc34f9f049e85e45da03800b46139c1
+  build: pyhd8ed1ab_0
+  arch: x86_64
+  subdir: linux-64
+  build_number: 0
+  license: MIT
+  license_family: MIT
+  noarch: python
+  size: 18433
+  timestamp: 1604308660817
 - platform: linux-64
   name: tomli
   version: 2.0.1

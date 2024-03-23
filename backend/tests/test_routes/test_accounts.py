@@ -33,3 +33,10 @@ def test_get_account_balance(
         response = client_with_accounts.get(f"/accounts/{account_id}/balance")
         assert response.status_code == 200
         assert response.json() == expected_value
+
+
+def test_list_accounts(client: TestClient):
+    response = client.get("/accounts/")
+
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
