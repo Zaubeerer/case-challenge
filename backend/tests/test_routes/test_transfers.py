@@ -1,37 +1,67 @@
 import pytest
 from banking_api.models import Transfer, TransferCreate
-from banking_api.routes.transfers import InsufficientFunds
+from banking_api.routes.transfers import AccountIDError, InsufficientFunds
 from conftest import TRANSFER
 from fastapi.testclient import TestClient
 
 
 @pytest.mark.parametrize(
-    "amount, expected_response, expected_exception",
+    "transfer_data, expected_response, expected_exception",
     [
         pytest.param(
-            100.0,
+            {
+                "id": 1,
+                "amount": 100.0,
+                "id_sender": 1,
+                "id_receiver": 2,
+            },
             TransferCreate(
                 **{"id_sender": 1, "id_receiver": 2, "amount": 100.0, "id": 1}
             ),
             None,
             id="transfer successful",
         ),
-        pytest.param(2000.0, None, InsufficientFunds, id="transfer failed"),
+        pytest.param(
+            {
+                "id": 1,
+                "amount": 2000.0,
+                "id_sender": 1,
+                "id_receiver": 2,
+            },
+            None,
+            InsufficientFunds,
+            id="transfer failed",
+        ),
+        pytest.param(
+            {
+                "id": 1,
+                "amount": 2000.0,
+                "id_sender": 10,
+                "id_receiver": 2,
+            },
+            None,
+            AccountIDError,
+            id="transfer failed",
+        ),
+        pytest.param(
+            {
+                "id": 1,
+                "amount": 2000.0,
+                "id_sender": 1,
+                "id_receiver": 10,
+            },
+            None,
+            AccountIDError,
+            id="transfer failed",
+        ),
     ],
 )
 def test_transfer_amount(
     client_with_accounts: TestClient,
-    amount: float,
+    transfer_data: dict,
     expected_response: dict | None,
     expected_exception: Exception | None,
 ):
-    transfer_data = {
-        "id": 1,
-        "amount": amount,
-        "id_sender": 1,
-        "id_receiver": 2,
-    }
-
     transfer_create = TransferCreate(**transfer_data)
 
     if expected_exception is not None:
