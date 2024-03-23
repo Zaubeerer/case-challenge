@@ -3,15 +3,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
-from ..database import SessionDep, create_db_and_tables
+from ..database import SessionDep
 from ..models import Account, Customer, CustomerCreate
 
 router = APIRouter()
-
-
-@router.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 
 @router.get("/", response_model=list[Customer])

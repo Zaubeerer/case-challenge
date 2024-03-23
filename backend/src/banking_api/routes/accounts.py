@@ -1,18 +1,13 @@
 from banking_api.models import Account, AccountCreate
 from fastapi import APIRouter
 
-from ..database import SessionDep, create_db_and_tables
+from ..database import SessionDep
 
 router = APIRouter()
 
 
 class AccountNotFound(ValueError):
     pass
-
-
-@router.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 
 @router.get("/", response_model=list[Account])

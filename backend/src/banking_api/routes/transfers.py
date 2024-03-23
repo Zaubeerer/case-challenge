@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from sqlalchemy import or_
 from sqlmodel import select
 
-from ..database import SessionDep, create_db_and_tables
+from ..database import SessionDep
 from ..models import Account, Transfer, TransferCreate
 
 router = APIRouter()
@@ -14,11 +14,6 @@ class AccountIDError(ValueError):
 
 class InsufficientFunds(Exception):
     pass
-
-
-@router.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 
 @router.post("/", response_model=Transfer)
@@ -48,7 +43,7 @@ def transfer_amount(
         account_sender.balance -= transfer_in.amount
         account_receiver.balance += transfer_in.amount
 
-        transfer = Transfer(**transfer_in.dict())
+        transfer = Transfer(**transfer_in.model_dump())
         session.add(transfer)
         session.commit()
         session.refresh(transfer)
