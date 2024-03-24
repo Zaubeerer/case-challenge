@@ -35,6 +35,22 @@ def create_account(account_in: AccountCreate, session: SessionDep) -> Any:
     return account
 
 
+@router.delete("/{account_id}", response_model=Account)
+def delete_account(account_id: int, session: SessionDep) -> Any:
+    """
+    Delete a specific account.
+    """
+    account = session.query(Account).get(account_id)
+    if account:
+        session.delete(account)
+        session.commit()
+        return account
+    else:
+        raise AccountNotFound(
+            status_code=404, detail=f"Account with {account_id=} not found"
+        )
+
+
 @router.get("/{account_id}/balance", response_model=float)
 def get_account_balance(account_id: int, session: SessionDep) -> Any:
     """

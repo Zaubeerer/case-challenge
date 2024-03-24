@@ -26,6 +26,21 @@ with cols[1]:
             json={"customer_id": customer[1], "balance": balance},
         )
 
+st.write("Delete an Account")
+response = requests.get(
+    "https://banking-api.fly.dev/accounts/",
+)
+account_id = int(
+    st.selectbox(
+        "Select an account",
+        options=[account["id"] for account in response.json()],
+    )
+)
+delete_button = st.button("Delete an account")
+
+if delete_button:
+    response = requests.delete(f"https://banking-api.fly.dev/accounts/{account_id}")
+
 st.write("Accounts")
 response = requests.get("https://banking-api.fly.dev/accounts/")
 st.table(pd.DataFrame(response.json()))
