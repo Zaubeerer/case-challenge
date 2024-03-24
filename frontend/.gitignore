@@ -1,0 +1,28 @@
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.coverage
+coverage.xml
+
+# Virtual environments
+venv/
+env/
+env.bak/
+env1/
+env2/
+.env
+.pixi
+
+
+# # IDEs and editors
+# .idea/
+# .vscode/
+# *.sublime-project
+# *.sublime-workspace
+# TODO:
+

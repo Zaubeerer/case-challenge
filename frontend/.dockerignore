@@ -1,0 +1,41 @@
+# flyctl launch added from .gitignore
+
+# Python
+**/*.pyc
+**/*.pyo
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+**/*.egg-info
+**/.coverage
+**/coverage.xml
+
+# Virtual environments
+**/venv
+**/env
+**/env.bak
+**/env1
+**/env2
+**/.env
+**/.pixi
+
+
+# # IDEs and editors
+# .idea/
+# .vscode/
+# *.sublime-project
+# *.sublime-workspace
+# TODO:
+
+
+# flyctl launch added from .pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/_pydevd_frame_eval/.gitignore
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/_pydevd_frame_eval/pydevd_frame_evaluator.*.so
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/_pydevd_frame_eval/pydevd_frame_evaluator.*.pyd
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/_pydevd_frame_eval/pydevd_frame_evaluator.pyx
+
+# flyctl launch added from .pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/linux_and_mac/.gitignore
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/linux_and_mac/attach_x86.dylib
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/linux_and_mac/attach_x86_64.dylib
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/linux_and_mac/attach_linux_x86.o
+.pixi/env/lib/python3.12/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/linux_and_mac/attach_linux_x86_64.o
+fly.toml
