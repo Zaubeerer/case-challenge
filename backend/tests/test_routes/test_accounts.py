@@ -19,6 +19,38 @@ def test_create_bank_account(client: TestClient):
 @pytest.mark.parametrize(
     "account_id, expected_value, status_code, expected_exception",
     [
+        pytest.param(
+            1,
+            {"id": 1, "customer_id": 4, "balance": 1000.0},
+            200,
+            None,
+            id="account_exists",
+        ),
+        pytest.param(
+            3,
+            {"detail": "Account with account_id=3 not found"},
+            404,
+            AccountNotFound,
+            id="account_not_found",
+        ),
+    ],
+)
+def test_delete_account(
+    client_with_accounts: TestClient,
+    account_id: int,
+    expected_value: float | str,
+    status_code: int,
+    expected_exception: Exception | None,
+):
+    response = client_with_accounts.delete(f"/accounts/{account_id}")
+
+    assert response.status_code == status_code
+    assert response.json() == expected_value
+
+
+@pytest.mark.parametrize(
+    "account_id, expected_value, status_code, expected_exception",
+    [
         pytest.param(1, 1000.0, 200, None, id="account_exists"),
         pytest.param(
             3,
