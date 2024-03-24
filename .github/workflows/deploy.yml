@@ -4,8 +4,8 @@ on:
     branches:
       - master
 jobs:
-  deploy:
-    name: Deploy app
+  deploy-backend:
+    name: Deploy FastAPI
     runs-on: ubuntu-latest
     concurrency: deploy-group
     steps:
@@ -16,3 +16,16 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         working-directory: ./backend
+
+  deploy-frontend:
+    name: Deploy Streamlit App
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        working-directory: ./frontend
