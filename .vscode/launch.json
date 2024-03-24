@@ -31,5 +31,32 @@
             "python": "${workspaceFolder}/backend/.pixi/env/bin/python",
             "envFile": "${workspaceFolder}/.env",
         },
+        {
+            "name": "Python: Streamlit",
+            "type": "python",
+            "request": "launch",
+            "module": "streamlit",
+            "python": "${workspaceFolder}/frontend/.pixi/env/bin/python",
+            "args": [
+                "run",
+                "${workspaceFolder}/frontend/src/app.py",
+                "--server.port",
+                "8501",
+            ],
+            "cwd": "${workspaceFolder}/frontend",
+            "env": {
+                "DEBUG": "True",
+            }
+        },
     ],
+    "compounds": [
+        {
+            "name": "Python: Fullstack",
+            "configurations": [
+                "Python: Streamlit",
+                "Python: FastAPI"
+            ],
+            "stopAll": true
+        }
+    ]
 }

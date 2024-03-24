@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import streamlit as st
-from st_utils.menu import APP_TITLE, ICON_PATH, menu_with_redirect
+from st_utils.menu import APP_TITLE, ICON_PATH, URL, menu_with_redirect
 
 st.set_page_config(page_title=APP_TITLE, page_icon=str(ICON_PATH))
 
@@ -16,14 +16,12 @@ with cols[1]:
     create_button = st.button("Create customer")
 
     if create_button:
-        response = requests.post(
-            "https://banking-api.fly.dev/customers/", json={"name": customer_name}
-        )
+        response = requests.post(f"{URL}/customers/", json={"name": customer_name})
 
 st.write("Delete a Customer")
 cols = st.columns(2)
 with cols[0]:
-    customers = requests.get("https://banking-api.fly.dev/customers/")
+    customers = requests.get(f"{URL}/customers/")
     customer = st.selectbox(
         "Select a customer",
         options=[(customer["name"], customer["id"]) for customer in customers.json()],
@@ -34,10 +32,8 @@ with cols[1]:
 
     if delete_button:
         customer_id = customer[1]
-        response = requests.delete(
-            f"https://banking-api.fly.dev/customers/{customer_id}"
-        )
+        response = requests.delete(f"{URL}/customers/{customer_id}")
 
 st.write("Customers")
-response = requests.get("https://banking-api.fly.dev/customers")
+response = requests.get(f"{URL}/customers")
 st.table(pd.DataFrame(response.json()))

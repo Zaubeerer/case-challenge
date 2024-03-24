@@ -1,3 +1,4 @@
+import os
 import pathlib
 
 import streamlit as st
@@ -9,6 +10,10 @@ LOGO_PATH = CFD / "logo.png"
 ICON_PATH = CFD / "logo.png"
 
 APP_TITLE = "Banking App"
+DEBUG = os.getenv("DEBUG", False)
+URL = "http://localhost:8000" if DEBUG else "https://banking-api.fly.dev"
+
+print(f"DEBUG: {DEBUG}")
 
 
 def sidebar_header():
